@@ -1,3 +1,6 @@
 flask
 google-cloud-aiplatform
 protobuf
+requests
+gunicorn
+Werkzeug
