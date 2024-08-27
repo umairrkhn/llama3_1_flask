@@ -70,7 +70,7 @@
 <body>
     <div class="container">
         <h1>Llama 3.1 Vertex AI Endpoint</h1>
-        <form method="post">
+        <form id="predict-form">
             <div class="form-group">
                 <label for="prompt">Enter your prompt:</label>
                 <input type="text" id="prompt" name="prompt" required>
@@ -79,11 +79,27 @@
                 <button type="submit">Submit</button>
             </div>
         </form>
-        {% if result %}
-        <div class="result">
-            <pre>{{ result }}</pre>
-        </div>
-        {% endif %}
+        <div class="result" id="result"></div>
     </div>
+    <script>
+        document.getElementById('predict-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const prompt = document.getElementById('prompt').value;
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ instances: { prompt: prompt } })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').textContent = data.predictions.join('\n');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
 </body>
 </html>
